@@ -1,0 +1,65 @@
+---
+title: "Test"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+Load the data
+Remove these people: If you would like to take part in this study, please click "I Agree" and begin answering the questions.
+
+Remove I disagree folks for above question
+
+Check IDs are all unique
+
+```{r}
+library(dplyr)
+setwd("~/Google Drive/Agenda/Jobs/CSBH")
+csbh_dat = read.csv("csbh_dat.csv", header = TRUE)
+sum(duplicated(csbh_dat$ID))
+csbh_dat_eval = csbh_dat %>%
+  select(ID, school_district, practice_mindfulness_students, Response) %>%
+  filter(Response =="I agree") %>%
+  select(-c(Response)) %>%
+### Recode Always = 4, Often = 3, Sometimes = 2, Rarely = 1
+  mutate(practice_mindfulness_students = case_when(
+    practice_mindfulness_students == "Always" ~ 4, 
+    practice_mindfulness_students == "Often" ~ 3,
+    practice_mindfulness_students == "Sometimes" ~ 2,
+    practice_mindfulness_students == "Rarely" ~ 1,
+  ))
+csbh_dat_eval
+```
+Table One Statistics
+```{r}
+library(tableone)
+tab_one = CreateTableOne(data = csbh_dat_eval)
+print(tab_one, showAllLevels = TRUE)
+```
+Get means, difference, means, percentage change, and statistical difference 
+```{r}
+library(descr)
+mean_out = round(compmeans(csbh_dat_eval$practice_mindfulness_students, csbh_dat_eval$school_district),2)
+mean_out_alvin = mean_out[1,1]
+mean_out_alvin = mean_out[2,1]
+p_change_alvin_katy =  round((mean_out_alvin-mean_out_katy)/mean_out_katy,2)
+n = dim(csbh_dat_eval)[1]
+results = data.frame(mean_out_alvin, mean_out_katy, p_change_alvin_katy, n)
+results
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
