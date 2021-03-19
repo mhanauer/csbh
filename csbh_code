@@ -42,24 +42,49 @@ Get means, difference, means, percentage change, and statistical difference
 library(descr)
 mean_out = round(compmeans(csbh_dat_eval$practice_mindfulness_students, csbh_dat_eval$school_district),2)
 mean_out_alvin = mean_out[1,1]
-mean_out_alvin = mean_out[2,1]
+mean_out_katy = mean_out[2,1]
 p_change_alvin_katy =  round((mean_out_alvin-mean_out_katy)/mean_out_katy,2)
 n = dim(csbh_dat_eval)[1]
 results = data.frame(mean_out_alvin, mean_out_katy, p_change_alvin_katy, n)
+results$p_change_alvin_katy = paste0(results$p_change_alvin_katy*100, "%")
 results
 ```
+Dumbells graph
+Remove all axes
+Add title with colors corrsponding to groups
+Change height
+```{r}
+## Create graph data frame
+results_graph = results 
+results_graph$n = paste0("N=", n)
+blue <- "#0171CE"
+red <- "#DE4433"
+library(ggplot2)
+library(ggalt)
+library(ggtext) 
+plot_out = ggplot() +
+  geom_dumbbell(data=results_graph, aes(y=n, x =mean_out_katy  , xend = mean_out_alvin), size=1.5, color="#b2b2b2", size_x=15, size_xend = 15, colour_x = blue, colour_xend = red)+
+  xlim(1, 6) +
+  geom_text(data=results_graph, aes(x=mean_out_katy, y=n, label=mean_out_katy),
+          color=blue, size=5, vjust=3.5) +
+  geom_text(data=results_graph, aes(x=mean_out_alvin, y=n, label=mean_out_alvin),
+          color=red, size=5, vjust=3.5) +
+  theme(axis.text.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank()) +
+ labs(title = "<span style = 'color: red;'>Katy </span>teachers reported<span style ='font-weight:bold;'>  36% </span>more time practicing mindfullness than <span style = 'color: blue;'>Alvin </span>teachers", subtitle = ("Differences were statistically significant p = .002")) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+panel.background = element_blank(), plot.title = element_markdown()) +
+  theme(text=element_text(size=12,  family="Verdana"))
 
+plot_out
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+ggsave("plot_out.png", plot_out, width = 9, height = 2)
+```
+Evaluate if results are statistically significant
+```{r}
+wilcox.test(csbh_dat_eval$practice_mindfulness_students ~ csbh_dat_eval$school_district, conf.int = TRUE)
+```
