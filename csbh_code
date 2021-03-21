@@ -75,7 +75,7 @@ plot_out = ggplot() +
         axis.ticks.y = element_blank(),
         axis.title.x = element_blank(),
         axis.title.y = element_blank()) +
- labs(title = "<span style = 'color: red;'>Katy </span>teachers reported<span style ='font-weight:bold;'>  36% </span>more time practicing mindfullness than <span style = 'color: blue;'>Alvin </span>teachers", subtitle = ("Differences were statistically significant p = .002")) +
+ labs(title = "<span style = 'color: red;'>Alvin </span>teachers reported<span style ='font-weight:bold;'>  36% </span>more time practicing mindfullness than <span style = 'color: blue;'>Katy </span>teachers", subtitle = ("Differences were statistically significant p = .002")) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
 panel.background = element_blank(), plot.title = element_markdown()) +
   theme(text=element_text(size=12,  family="Verdana"))
@@ -88,3 +88,21 @@ Evaluate if results are statistically significant
 ```{r}
 wilcox.test(csbh_dat_eval$practice_mindfulness_students ~ csbh_dat_eval$school_district, conf.int = TRUE)
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
